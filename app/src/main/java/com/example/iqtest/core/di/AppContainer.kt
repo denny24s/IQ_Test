@@ -24,7 +24,7 @@ class DefaultAppContainer(
 ) : AppContainer {
 
     private val appContext = context.applicationContext
-    private val firebaseDataSources = FirebaseDataSources()
+    private val firebaseDataSources = FirebaseDataSources.create(appContext)
 
     private val authDataSource = FirebaseAuthDataSource(firebaseDataSources.auth)
     private val firestoreDataSource = FirestoreDataSource(firebaseDataSources.firestore)
