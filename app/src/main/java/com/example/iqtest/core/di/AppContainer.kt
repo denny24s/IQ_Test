@@ -4,7 +4,6 @@ import android.content.Context
 import com.example.iqtest.data.local.QuestionsLocalDataSource
 import com.example.iqtest.data.local.UserPreferencesDataSource
 import com.example.iqtest.data.remote.FirebaseAuthDataSource
-import com.example.iqtest.data.remote.FirebaseDataSources
 import com.example.iqtest.data.remote.FirestoreDataSource
 import com.example.iqtest.data.repository.AuthRepositoryImpl
 import com.example.iqtest.data.repository.TestRepositoryImpl
@@ -24,10 +23,9 @@ class DefaultAppContainer(
 ) : AppContainer {
 
     private val appContext = context.applicationContext
-    private val firebaseDataSources = FirebaseDataSources.create(appContext)
 
-    private val authDataSource = FirebaseAuthDataSource(firebaseDataSources.auth)
-    private val firestoreDataSource = FirestoreDataSource(firebaseDataSources.firestore)
+    private val authDataSource = FirebaseAuthDataSource(appContext)
+    private val firestoreDataSource = FirestoreDataSource(appContext)
     private val userPreferencesDataSource = UserPreferencesDataSource(appContext)
     private val questionsLocalDataSource = QuestionsLocalDataSource(appContext)
 
