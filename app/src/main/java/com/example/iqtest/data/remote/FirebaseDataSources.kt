@@ -18,17 +18,22 @@ data class FirebaseDataSources(
     companion object {
         fun create(context: Context): FirebaseDataSources {
             val appContext = context.applicationContext
-            val firebaseApp = FirebaseApp.initializeApp(appContext)
-                ?: FirebaseApp.getApps(appContext).firstOrNull()
+            return runCatching {
+                val firebaseApp = FirebaseApp.initializeApp(appContext)
+                    ?: FirebaseApp.getApps(appContext).firstOrNull()
 
-            if (firebaseApp == null) {
-                return FirebaseDataSources(auth = null, firestore = null)
+                if (firebaseApp == null) {
+                    FirebaseDataSources(auth = null, firestore = null)
+                } else {
+                    FirebaseDataSources(
+                        auth = FirebaseAuth.getInstance(firebaseApp),
+                        firestore = FirebaseFirestore.getInstance(firebaseApp)
+                    )
+                }
+            }.getOrElse {
+                // Defensive fallback: never crash app startup due to Firebase config issues.
+                FirebaseDataSources(auth = null, firestore = null)
             }
-
-            return FirebaseDataSources(
-                auth = FirebaseAuth.getInstance(firebaseApp),
-                firestore = FirebaseFirestore.getInstance(firebaseApp)
-            )
         }
     }
 }
